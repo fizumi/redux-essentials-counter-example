@@ -1,4 +1,6 @@
-import produce from 'immer';
+import * as R from 'ramda';
+
+const lens = R.lensPath(['counter', 'value']);
 
 export const entier = {
   // initialState: B = { counter: { value: number } }
@@ -11,17 +13,11 @@ export const entier = {
       ...state,
       counter: {
         ...state.counter,
-        value: state.counter.value + 1, // without immer
+        value: state.counter.value + 1, // without ramda
       },
     }),
-    decrement: _ =>
-      produce(state => {
-        state.counter.value -= 1; // with immer
-      }),
-    incrementByAmount: amount =>
-      produce(state => {
-        state.counter.value += amount;
-      }),
+    decrement: _ => R.over(lens, R.dec), // with ramda
+    incrementByAmount: amount => R.over(lens, R.add(amount)),
   },
 };
 
@@ -40,6 +36,6 @@ export const incrementAsync = amount => dispatch => {
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
-export const selectCount = state => state.counter.value;
+export const selectCount = R.view(lens);
 
 export default entier.initialState;
