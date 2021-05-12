@@ -1,0 +1,5 @@
+# オリジナルとの差分が少なくなるように設定
+semi: true
+singleQuote: true
+printWidth: 80
+arrowParens: 'avoid'
