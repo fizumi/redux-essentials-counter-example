@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import {
+  useAppSelector as useSelector,
+  useAppDispatch as useDispatch,
+} from '../../app/hooks';
 import {
   decrement,
   increment,
