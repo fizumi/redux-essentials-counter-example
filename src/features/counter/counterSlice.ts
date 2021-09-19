@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState, AppDispatch } from '../../app/store';
+import type { RootState } from '../../app/store';
+import { put, delay } from 'redux-saga/effects';
 
 // Define a type for the slice state
 interface CounterState {
@@ -30,20 +31,17 @@ export const slice = createSlice({
     incrementByAmount: (state, action: PayloadAction<number>) => {
       state.value += action.payload;
     },
+    incrementAsync: (state, action: PayloadAction<number>) => {},
   },
 });
 
-export const { increment, decrement, incrementByAmount } = slice.actions;
+export const { increment, decrement, incrementByAmount, incrementAsync } =
+  slice.actions;
 
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched
-export const incrementAsync = (amount: number) => (dispatch: AppDispatch) => {
-  setTimeout(() => {
-    dispatch(incrementByAmount(amount));
-  }, 1000);
-};
+export function* incrementAsyncSaga(action: ReturnType<typeof incrementAsync>) {
+  yield delay(1000);
+  yield put(incrementByAmount(action.payload));
+}
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.counter.value;
